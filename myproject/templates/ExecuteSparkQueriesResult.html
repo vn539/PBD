@@ -1,0 +1,111 @@
+<!-- container to display weather data -->
+<div>
+<div id ="weatherdata">
+	{%if queryOption == "1" %}
+		<table>
+			<tr>
+			<td>Language</td>
+			<td>Count</td>
+			</tr>
+			{% for wd in wds %}
+				<tr>
+				<td>{{wd.lang}}</td>
+				<td>{{wd.count}}</td>
+				</tr>
+				<div style="display:none" lang="{{wd.lang}}" count="{{wd.count}}"></div>
+			{% endfor %}
+		</table>
+	{% endif %}
+
+	{%if queryOption == "2" %}
+		<table>
+			<tr>
+			<td>Lat</td>
+			<td>Lng</td>
+			<td>Screen Name</td>
+			<td>Condition</td>
+			</tr>
+			{% for wd in wds %}
+				<tr>
+				<td>{{wd.lat}}</td>
+				<td>{{wd.lng}}</td>
+				<td>{{wd.screenname}}</td>
+				<td>{{wd.condition}}</td>
+				</tr>
+				<div style="display:none" lat="{{wd.lat}}" lng="{{wd.lng}}" screenname="{{wd.screenname}}" condition="{{wd.condition}}"></div>
+			{% endfor %}
+		</table>
+	{% endif %}
+
+	{%if queryOption == "3" %}
+		<table>
+			<tr>
+			<td>Condition</td>
+			<td>Timezone</td>
+			<td>Count</td>
+			</tr>
+			{% for wd in wds %}
+				<tr>
+				<td>{{wd.condition}}</td>
+				<td>{{wd.timezone}}</td>
+				<td>{{wd.count}}</td>
+				</tr>
+				<div style="display:none" condition="{{wd.condition}}" timezone="{{wd.timezone}}" count="{{wd.count}}"></div>
+			{% endfor %}
+		</table>
+	{% endif %}
+
+	{%if queryOption == "4" %}
+		<table>
+			<tr>
+			<td>Text</td>			
+			</tr>
+			{% for wd in wds %}
+				<tr>
+				<td>{{wd.text}}</td>				
+				</tr>
+				<div style="display:none" text="{{wd.text}}"></div>
+			{% endfor %}
+		</table>
+	{% endif %}
+
+	{%if queryOption == "5" %}
+		<table>
+			<tr>
+			<td>Screen Name</td>			
+			<td>Count</td>
+			</tr>
+			{% for wd in wds %}
+				<tr>
+				<td>{{wd.screenname}}</td>				
+				<td>{{wd.count}}</td>
+				</tr>
+				<div style="display:none" screenname="{{wd.screenname}}" count="{{wd.count}}"></div>
+			{% endfor %}
+		</table>
+	{% endif %}
+
+	{%if queryOption == "6" %}
+		<table>
+			<tr>
+			<td>Country</td>			
+			<td>Tweet Source</td>			
+			<td>Count</td>
+			</tr>
+			{% for wd in wds %}
+				<tr>
+				<td>{{wd.country}}</td>				
+				<td>{{wd.source}}</td>				
+				<td>{{wd.count}}</td>
+				</tr>
+				<div style="display:none" country="{{wd.country}}" source="{{wd.source}}" count="{{wd.count}}"></div>
+			{% endfor %}
+		</table>
+	{% endif %}
+ </div>
+<!-- container to store query option -->
+<div id ="userqueryoption">
+	<div id="queryoptionvalue">{{queryOption}}</div>
+</div>
+</div>
+

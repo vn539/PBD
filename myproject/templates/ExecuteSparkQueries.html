@@ -1,0 +1,361 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <!--<script src="../Scripts/langTweetCountBar.js"></script>-->
+
+    <title>Spark Query</title>
+</head>
+
+<body>
+
+ <style>
+	#container {
+	    height: 400px; 
+	    min-width: 310px; 
+	    max-width: 800px;
+	    margin: 0 auto;
+	}
+</style> 
+
+	
+<script type="text/javascript">
+	//Javascript to run Spark Query
+	function runSparkQuery(e)
+	{
+	    var postData = $('#frmSparkQuery').serialize();
+	    $.ajax({
+		url: '/executesparkqueries/',
+		type: "POST",
+		dataType: "text",
+		data: postData,
+		timeout: 9000000000,
+		success: function(m) {
+			//alert('Response from ajax call: ' + m);
+			responseDoc = $.parseHTML(m);
+
+			// get and inject weather result data
+			var resultData = $(responseDoc).find('#weatherdata');
+			//alert('resultData: ' + resultData.html());
+			document.getElementById('weatherdata').innerHTML = resultData.html();
+			document.getElementById('weatherdata').style.display = "block" ;
+
+			// get query option
+			var userQueryOption = $(responseDoc).find('#userqueryoption');
+			//alert('userQueryOption: ' + userQueryOption.html());
+			document.getElementById('userqueryoption').innerHTML = userQueryOption.html();
+			var queryOptionValue = parseInt(document.getElementById('queryoptionvalue').innerHTML);
+			//alert('queryOptionValue: ' + queryOptionValue);
+
+			if (queryOptionValue == 1)
+			{
+				// get and inject result chart
+				var datadivs = document.getElementById('weatherdata').getElementsByTagName("div");
+				var langs = new Array();
+				var langsCount = new Array();
+
+				for(var i = 0; i < datadivs.length; i++){
+					var lang = datadivs[i].getAttribute("lang");
+					langs.push(lang);
+
+					var langCount = parseInt(datadivs[i].getAttribute("count"));
+					langsCount.push(langCount);
+				}
+			
+				langTweetCountBar(langs, langsCount);
+			}
+			if (queryOptionValue == 2)
+			{
+				// get and inject result chart
+				// var car = {type:"Fiat", model:500, color:"white"};
+				var datadivs = document.getElementById('weatherdata').getElementsByTagName("div");
+				var markers = new Array();
+
+				for(var i = 0; i < datadivs.length; i++){
+					var lat = Number(datadivs[i].getAttribute("lat"));
+					var lng = Number(datadivs[i].getAttribute("lng"));
+					var screenname = datadivs[i].getAttribute("screenname");
+					var condition = datadivs[i].getAttribute("condition");
+
+					var marker = {lat:lat, lng:lng, screenname:screenname, condition:condition };
+					markers.push(marker);
+				}
+			
+				initMap(markers);
+			}
+			if (queryOptionValue == 6)
+			{
+				// get and inject result chart
+				var datadivs = document.getElementById('weatherdata').getElementsByTagName("div");
+				var iPhoneCounts = [];
+				var androidCounts = [];
+				var webCounts = [];
+
+				for(var i = 0; i < datadivs.length; i++){
+					var country = datadivs[i].getAttribute("country");
+					var source = datadivs[i].getAttribute("source");
+					var sourceCount = parseInt(datadivs[i].getAttribute("count"));
+
+					//['United States', 'Canada', 'United Kingdom', 'Australia']
+					if (country == 'United States' && source == 'iPhone')
+					{
+						iPhoneCounts[0] = sourceCount;
+					}
+					if (country == 'United States' && source == 'Android')
+					{
+						androidCounts[0] = sourceCount;
+					}
+					if (country == 'United States' && source == 'Web')
+					{
+						webCounts[0] = sourceCount;
+					}
+					if (country == 'Canada' && source == 'iPhone')
+					{
+						iPhoneCounts[1] = sourceCount;
+					}
+					if (country == 'Canada' && source == 'Android')
+					{
+						androidCounts[1] = sourceCount;
+					}
+					if (country == 'Canada' && source == 'Web')
+					{
+						webCounts[1] = sourceCount;
+					}
+					if (country == 'United Kingdom' && source == 'iPhone')
+					{
+						iPhoneCounts[2] = sourceCount;
+					}
+					if (country == 'United Kingdom' && source == 'Android')
+					{
+						androidCounts[2] = sourceCount;
+					}
+					if (country == 'United Kingdom' && source == 'Web')
+					{
+						webCounts[2] = sourceCount;
+					}
+					if (country == 'Australia' && source == 'iPhone')
+					{
+						iPhoneCounts[3] = sourceCount;
+					}
+					if (country == 'Australia' && source == 'Android')
+					{
+						androidCounts[3] = sourceCount;
+					}
+					if (country == 'Australia' && source == 'Web')
+					{
+						webCounts[3] = sourceCount;
+					}
+				}
+
+				alert(iPhoneCounts);
+				alert(androidCounts);
+				alert(webCounts);
+				countrySourceTweetCountBar(iPhoneCounts, androidCounts, webCounts);
+			}
+		},
+		error: function(n, textStatus, exception) {
+			alert('Error from ajax call: ' + n);
+	
+		}
+	    });
+	}
+
+	﻿function langTweetCountBar(langs, langsCount) {
+	    var chart = {
+		type: 'bar'
+	    };
+	    var title = {
+		text: 'Monthly Average Temperature'
+	    };
+	    var subtitle = {
+		text: 'Source: WorldClimate.com'
+	    };
+	    var xAxis = {
+		categories: langs
+	    };
+	    var yAxis = {
+		title: {
+		    text: 'Tweet Count'
+		},
+		min: 100,
+		max: 777,
+		plotLines: [{
+		    color: '#808080'
+		}]
+	    };
+
+	    var tooltip = {
+
+	    }
+
+	    var legend = {
+		layout: 'vertical',
+		align: 'right',
+		verticalAlign: 'middle',
+		borderWidth: 0
+	    };
+
+	    var series = [
+	       {
+		   name: 'Tweets',
+		   data: langsCount
+	       }
+	    ];
+
+	    var json = {};
+
+	    json.chart = chart;
+	    json.title = title;
+	    json.subtitle = subtitle;
+	    json.xAxis = xAxis;
+	    json.yAxis = yAxis;
+	    json.tooltip = tooltip;
+	    json.legend = legend;
+	    json.series = series;
+
+	    $('#container').highcharts(json);
+	};
+
+	﻿function countrySourceTweetCountBar(iPhoneCounts, androidCounts, webCounts) {
+	    var chart = {
+		type: 'column',
+		options3d: {
+			enabled: true,
+			alpha: 15,
+			beta: 15,
+			viewDistance: 25,
+			depth: 40
+		},
+		marginTop: 80,
+		marginRight: 40
+	    };
+	    var title = {
+		text: 'Total tweeter source, grouped by country'
+	    };
+	    var subtitle = {
+		text: 'Source: WorldClimate.com'
+	    };
+	    var xAxis = {
+		categories: ['United States', 'Canada', 'United Kingdom', 'Australia']
+	    };
+	    var yAxis = {
+		    allowDecimals: false,
+		    min: 0,
+		    title: {
+		        text: 'Number of users'
+		    }
+	    };
+
+	    var tooltip = {
+		    headerFormat: '<b>{point.key}</b><br>',
+		    pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y}'
+	    };
+
+	var plotOptions = {
+		column: {
+		stacking: 'normal',
+		depth: 40
+		}
+	};
+
+        var series = [{
+            name: 'iPhone',
+            data: iPhoneCounts
+        }, {
+            name: 'Android',
+            data: androidCounts
+        }, {
+            name: 'Web',
+            data: webCounts
+        }];
+
+	    var json = {};
+
+	    json.chart = chart;
+	    json.title = title;
+	    json.subtitle = subtitle;
+	    json.xAxis = xAxis;
+	    json.yAxis = yAxis;
+	    json.tooltip = tooltip;
+	    json.plotOptions = plotOptions;
+	    //json.legend = legend;
+	    json.series = series;
+
+	    $('#container').highcharts(json);
+	};
+
+	function initMap(markers) {
+		var myLatLng1 = {lat: markers[0].lat, lng: markers[0].lng};
+		var map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 1,
+			center: myLatLng1
+		});
+
+		for (var i = 0; i < markers.length; i++) {
+			var myLatLng = {lat: markers[i].lat, lng: markers[i].lng};
+
+			var marker = new google.maps.Marker({
+				position: myLatLng,
+				map: map,
+				title: markers[i].screenname + ' - ' + markers[i].condition
+			});
+
+
+		}
+	}
+
+</script>
+<div class="container" >	
+	<div class="jumbotron" style="width:110%;height: 100%;margin-top:35px;margin-left:-50px;">
+		<form id="frmSparkQuery" name="frmSparkQuery" action="" method="POST">
+		{% csrf_token%}
+
+		<!--Section that displays the table to fill the details to run a query -->			
+		<div style = "margin-top: -85px">
+			<table cellspacing = "25">
+				<tr style = "width: 80%">
+					<td style = "padding:30px">
+				  		Select the Query:
+			 			<select id="queryOption" NAME="queryOption"class="form-control" style="" >				
+							<option value="1">Query 1</option>
+							<option value="2">Query 2</option>
+							<option value="3">Query 3</option>
+							<option value="4">Query 4</option>
+							<option value="5">Query 5</option>
+							<option value="6">Query 6</option>
+							<option value="7">Query 7</option>
+							<option value="8">Query 8</option>
+	    					</select>
+					 </td>
+					<td style = "padding:30px;">
+						<br/>
+						<br/>
+							<input id="runquery"class="btn btn-primary btn-sm" onClick="runSparkQuery(event);" style="background-color:#5a87dd;border-color:#5a87dd;" type="button" alt="submitData" value="Run Spark Query" />			
+
+					</td>
+				</tr>		
+			</table>	
+		</div>
+		</form>
+	</div>
+</div>
+
+
+<!-- container to display weather data -->
+<div id ="weatherdata">
+</div>
+<!-- container to store query option -->
+<div id ="userqueryoption" style="display:none">
+	<div id="queryoptionvalue">{{queryOption}}</div>
+</div>
+
+<!-- container to display graphs -->
+<div id="container" style="width: 550px; height: 400px; margin: 0 auto"></div>
+<div id="map" style="width: 550px; height: 400px; margin: 0 auto"></div>
+
+</body>
+</html>
