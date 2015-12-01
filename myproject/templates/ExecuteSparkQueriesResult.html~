@@ -20,15 +20,19 @@
 	{%if queryOption == "2" %}
 		<table>
 			<tr>
-			<td>Location</td>
-			<td>Count</td>
+			<td>Lat</td>
+			<td>Lng</td>
+			<td>Screen Name</td>
+			<td>Condition</td>
 			</tr>
 			{% for wd in wds %}
 				<tr>
-				<td>{{wd.location}}</td>
-				<td>{{wd.count}}</td>
+				<td>{{wd.lat}}</td>
+				<td>{{wd.lng}}</td>
+				<td>{{wd.screenname}}</td>
+				<td>{{wd.condition}}</td>
 				</tr>
-				<div style="display:none" location="{{wd.location}}" count="{{wd.count}}"></div>
+				<div style="display:none" lat="{{wd.lat}}" lng="{{wd.lng}}" screenname="{{wd.screenname}}" condition="{{wd.condition}}"></div>
 			{% endfor %}
 		</table>
 	{% endif %}
@@ -98,6 +102,42 @@
 			{% endfor %}
 		</table>
 	{% endif %}
+
+
+
+
+
+	{%if queryOption == "7" %}
+		<table>
+			<tr>
+			<td>Screen name</td>
+			<td>Text</td>			
+			</tr>
+			{% for wd in wds %}
+				<tr>
+				<td>{{wd.screenname}}</td>
+				<td>{{wd.text}}</td>				
+				</tr>
+				<div style="display:none" screenname="{{wd.screenname}}" text="{{wd.text}}"></div>
+			{% endfor %}
+		</table>
+	{% endif %}
+	{%if queryOption == "8" %}
+		<table>
+			<tr>
+			<td>Text</td>
+			<td>Count</td>			
+			</tr>
+			{% for wd in wds %}
+				<tr>
+				<td>Text that contains "ache" or "traffic" or "economy"</td>
+				<td>{{wd.count}}</td>				
+				</tr>
+				<div style="display:none" text="{{wd.text}}"></div>
+			{% endfor %}
+		</table>
+	{% endif %}
+
  </div>
 <!-- container to store query option -->
 <div id ="userqueryoption">

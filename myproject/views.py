@@ -24,7 +24,7 @@ def executesparkqueries(request):
 		queryOption = request.POST.__getitem__('queryOption')
 		print ('queryOption: ' + queryOption)
 
-		#print "Ready to execute Spark Java program"
+		print "Ready to execute Spark Java program"
 		process = subprocess.Popen("./runsparkquery.sh " + queryOption, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 		#wait for the process to terminate
@@ -71,6 +71,14 @@ def executesparkqueries(request):
 				wd.country = splitData[0]
 				wd.source = splitData[1]
 				wd.count = splitData[2]
+
+
+			if queryOption == '7':
+				wd.screenname = splitData[0]
+				wd.text = splitData[1]
+
+			if queryOption == '8':
+				wd.count = splitData[0]
 
 			wds.append(wd)
 

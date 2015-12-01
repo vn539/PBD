@@ -199,15 +199,16 @@ public class SampleJson {
 			//DataFrame result = sqlContext.sql("SELECT place.country, count(place.country) FROM weather WHERE place.country != 'null' AND (text LIKE '%storm%' OR text LIKE '%rain%') GROUP BY place.country");
 			//DataFrame result = sqlContext.sql("SELECT place.country, user.screen_name FROM weather WHERE text LIKE '%storm%'");
 
-			DataFrame result = sqlContext.sql("SELECT DISTINCT u1.user.screen_name, u2.text FROM weather u1 JOIN weather u2 ON (u1.user.screen_name = u2.retweeted_status.user.screen_name) ORDER BY u1.user.screen_name"); 
+			//Get the user and text where the user has retweeted (replied) to his/her own tweet
+			DataFrame result = sqlContext.sql("SELECT DISTINCT u1.user.screen_name, u1.text FROM weather u1 JOIN weather u2 ON (u1.user.screen_name = u2.retweeted_status.user.screen_name) LIMIT 10"); 
 			//DataFrame result = sqlContext.sql("SELECT u1.user.screen_name, count(u2.retweeted_status.user.screen_name) FROM weather u1 JOIN weather u2 ON (u1.user.screen_name = u2.retweeted_status.user.screen_name) GROUP BY u2.retweeted_status.user.screen_name");
 			result.show();
 			List<WeatherData> wds = result.javaRDD().map(new Function<Row, WeatherData>(){
 			public WeatherData call(Row row){
 				WeatherData wd = new WeatherData();
 				wd.screenname = row.getString(0);
-				//wd.text = row.getString(1);
-				wd.count = row.getLong(1);
+				wd.text = row.getString(1);
+				//wd.count = row.getLong(1);
 				return  wd;
 			}}).collect();
 
@@ -215,13 +216,30 @@ public class SampleJson {
 			// country>109
 			for(WeatherData wd : wds){
 				//Only get the source value from href tag
-				out.write(wd.screenname + ">" + wd.count.toString());
+				out.write(wd.screenname + ">" + wd.text);
 				out.newLine();
 			}
 		}
 		else if (args[0].equals("8"))
 		{
-			DataFrame result = sqlContext.sql("SELECT count(lang), lang FROM df GROUP BY lang");
+			DataFrame result = sqlContext.sql("SELECT COUNT(text) FROM weather WHERE text LIKE '%traffic%' OR text LIKE '%ache%' OR text LIKE '%economy%' LIMIT 50");
+			result.show();
+			List<WeatherData> wds = result.javaRDD().map(new Function<Row, WeatherData>(){
+			public WeatherData call(Row row){
+				WeatherData wd = new WeatherData();
+				//wd.screenname = row.getString(0);
+				//wd.text = row.getString(1);
+				wd.count = row.getLong(0);
+				return  wd;
+			}}).collect();
+
+			// file data format
+			// country>109
+			for(WeatherData wd : wds){
+				//Only get the source value from href tag
+				out.write(wd.count.toString());
+				out.newLine();
+			}
 		}
 
 		out.close();
