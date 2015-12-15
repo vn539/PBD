@@ -1,6 +1,6 @@
 <!-- container to display weather data -->
 <div>
-<div id ="weatherdata">
+<div id ="weatherdata" style="width: 800px; height: 600px;">
 	{%if queryOption == "1" %}
 		<table>
 			<tr>
@@ -125,8 +125,8 @@
 	{%if queryOption == "8" %}
 		<table>
 			<tr>
-			<td>Text</td>
-			<td>Count</td>			
+			<!--<td>Text</td>
+			<td>Count</td>	-->		
 			</tr>
 			{% for wd in wds %}
 				<tr>

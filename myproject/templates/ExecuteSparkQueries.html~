@@ -21,6 +21,51 @@
 	    max-width: 800px;
 	    margin: 0 auto;
 	}
+
+
+
+.pure-button {
+    background-color: #1f8dd6;
+    color: white;
+    padding: 0.5em 2em;
+    border-radius: 5px;
+}
+
+a.pure-button-primary {
+    background: white;
+    color: #1f8dd6;
+    border-radius: 5px;
+    font-size: 120%;
+}
+
+
+table {
+    border: 1px solid #ccc;
+    width: 100%;
+    margin:0;
+    padding:0;
+    border-collapse: collapse;
+    border-spacing: 0;
+  
+  }
+
+  table tr {
+    border: 1px solid #ddd;
+    padding: 5px;
+  }
+
+  table th, table td {
+    padding: 10px;
+    text-align: center;
+  }
+
+  table th {
+    text-transform: uppercase;
+    font-size: 14px;
+    color:black;
+    letter-spacing: 1px;
+  }
+
 </style> 
 
 	
@@ -251,10 +296,10 @@
 		type: 'bar'
 	    };
 	    var title = {
-		text: 'Monthly Average Temperature'
+		text: 'Most Tweeted Language'
 	    };
 	    var subtitle = {
-		text: 'Source: WorldClimate.com'
+		text: ''
 	    };
 	    var xAxis = {
 		categories: langs
@@ -266,7 +311,7 @@
 		min: 100,
 		max: 777,
 		plotLines: [{
-		    color: '#808080'
+		    color: '#ff3300'
 		}]
 	    };
 
@@ -319,7 +364,7 @@
 		text: 'Total tweeter source, grouped by country'
 	    };
 	    var subtitle = {
-		text: 'Source: WorldClimate.com'
+		text: ''
 	    };
 	    var xAxis = {
 		categories: ['United States', 'Canada', 'United Kingdom', 'Australia']
@@ -372,7 +417,7 @@
 
 	function initMap(markers) {
 		var myLatLng1 = {lat: markers[0].lat, lng: markers[0].lng};
-		var map = new google.maps.Map(document.getElementById('map'), {
+		var map = new google.maps.Map(document.getElementById('container'), {
 			zoom: 1,
 			center: myLatLng1
 		});
@@ -544,7 +589,7 @@
 		    type: 'line'
 		},
 		title: {
-		    text: 'TimeTaken To Run Queries'
+		    text: 'TimeTaken To Run Queries in seconds'
 		},
 		subtitle: {
 		    text: ''
@@ -565,12 +610,12 @@
 		        enableMouseTracking: false
 		    }
 		},
-		series: [{
+		series: [/*{
 		    name: 'persist',
 		    data: [7.0, 6.9, 9.5, 14.5, 18.4, 21.5, 25.2, 26.5]
-		}, {
-		    name: 'without persist',
-		    data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6]
+		},*/ {
+		    
+		    data: [141, 74, 99, 66, 83, 261, 63, 83]
 		}]
 	    });
 	};
@@ -601,7 +646,7 @@
 						<option value="7">Query 7</option>
 						<option value="8">Query 8</option>
 					</select>
-					<input id="runquery"class="btn btn-primary btn-sm" onClick="runSparkQuery(event);" style="background-color:#5a87dd;border-color:#5a87dd;" type="button" alt="submitData" value="Run Spark Query" />			
+					<input id="runquery"class="pure-button pure-button-primary" onClick="runSparkQuery(event);" style="background-color:#5a87dd;border-color:#5a87dd;" type="button" alt="submitData" value="Run Spark Query" />			
 			</form>
 		 </td>
 		</tr>
@@ -609,7 +654,7 @@
 		 <td style="background: #2D3E50;">
 
 			<!-- container to display weather data -->
-			<div id ="weatherdata" style="background: #1f8dd6;width: 100%;">
+			<div id ="weatherdata" style="background: #2D3E50;width: 100%; height:600px;overflow:auto;margin-top:-585px;">
 			</div>
 		</td>
 		 <td style="background: #2D3E50;">
@@ -620,8 +665,8 @@
 			</div>
 
 			<!-- container to display graphs -->
-			<div id="container" style="width: 550px; height: 400px; margin: 0 auto"></div>
-			<div id="map" style="width: 550px; height: 400px; margin: 0 auto"></div>
+			<div id="container" style="width: 800px; height: 600px; margin: 0 auto;margin-top:60px;"></div>
+			<div id="map" style="width: 800px; height: 600px; margin: 0 auto;margin-top:60px;"></div>
 		</td>
 		</tr>		
 	</table>	

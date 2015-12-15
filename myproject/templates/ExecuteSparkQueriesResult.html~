@@ -1,6 +1,6 @@
 <!-- container to display weather data -->
 <div>
-<div id ="weatherdata">
+<div id ="weatherdata" style="width: 800px; height: 600px;">
 	{%if queryOption == "1" %}
 		<table>
 			<tr>
@@ -133,7 +133,7 @@
 				<td>Text that contains "ache" or "traffic" or "economy"</td>
 				<td>{{wd.count}}</td>				
 				</tr>
-				<div style="display:none" text="{{wd.text}}"></div>
+				<div style="display:none" text="{{wd.text}}" count="{{wd.count}}"></div>
 			{% endfor %}
 		</table>
 	{% endif %}

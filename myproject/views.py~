@@ -25,11 +25,11 @@ def executesparkqueries(request):
 		print ('queryOption: ' + queryOption)
 
 		print "Ready to execute Spark Java program"
-		process = subprocess.Popen("./runsparkquery.sh " + queryOption, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+	#	process = subprocess.Popen("./runsparkquery.sh " + queryOption, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 		#wait for the process to terminate
-		for line in process.stdout: process(line)
-		errcode = process.returncode
+	#	for line in process.stdout: process(line)
+	#	errcode = process.returncode
 
 		#print "errcode: "
 		#print errcode
@@ -41,46 +41,47 @@ def executesparkqueries(request):
 		wd = None
 
 		for line in dataFile:
-			splitData = line.split('>')
-			wd = WeatherData()
+			if line.find('>') != -1:
+				splitData = line.split('>')
+				wd = WeatherData()
 
-			if queryOption == '1':
-				wd.lang = splitData[0]
-				wd.count = splitData[1]
+				if queryOption == '1':
+					wd.lang = splitData[0]
+					wd.count = splitData[1]
 
-			if queryOption == '2':
-				splitLatLng = splitData[0].split(', ')
-				wd.lat = splitLatLng[0]
-				wd.lng = splitLatLng[1]
-				wd.screenname = splitData[1]
-				wd.condition = splitData[2]
+				if queryOption == '2':
+					splitLatLng = splitData[0].split(', ')
+					wd.lat = splitLatLng[0]
+					wd.lng = splitLatLng[1]
+					wd.screenname = splitData[1]
+					wd.condition = splitData[2]
 
-			if queryOption == '3':
-				wd.condition = splitData[0]
-				wd.timezone = splitData[1]
-				wd.count = splitData[2]
+				if queryOption == '3':
+					wd.condition = splitData[0]
+					wd.timezone = splitData[1]
+					wd.count = splitData[2]
 
-			if queryOption == '4':
-				wd.text = splitData[0]
+				if queryOption == '4':
+					wd.text = splitData[0]
 
-			if queryOption == '5':
-				wd.screenname = splitData[0]
-				wd.count = splitData[1]
+				if queryOption == '5':
+					wd.screenname = splitData[0]
+					wd.count = splitData[1]
 
-			if queryOption == '6':
-				wd.country = splitData[0]
-				wd.source = splitData[1]
-				wd.count = splitData[2]
+				if queryOption == '6':
+					wd.country = splitData[0]
+					wd.source = splitData[1]
+					wd.count = splitData[2]
 
 
-			if queryOption == '7':
-				wd.screenname = splitData[0]
-				wd.text = splitData[1]
+				if queryOption == '7':
+					wd.screenname = splitData[0]
+					wd.text = splitData[1]
 
-			if queryOption == '8':
-				wd.count = splitData[0]
+				if queryOption == '8':
+					wd.count = splitData[0]
 
-			wds.append(wd)
+				wds.append(wd)
 
 
 		dataFile.close()
